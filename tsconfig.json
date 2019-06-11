@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "alwaysStrict": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "lib": ["esnext", "esnext.array"],
+        "module": "esnext",
+        "moduleResolution": "node",
+        "noEmit": false,
+        "noEmitHelpers": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "removeComments": true,
+        "target": "esnext",
+        "typeRoots": ["node_modules/@types"]
+    },
+    "exclude": ["node_modules", "dist", "src/**/*.spec.ts"]
+}

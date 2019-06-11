@@ -1,0 +1,25 @@
+{
+    "presets": ["@babel/preset-env"],
+    "plugins": [
+        [
+            "babel-plugin-transform-builtin-extend",
+            {
+                "globals": ["Error"]
+            }
+        ],
+        [
+            "@babel/proposal-decorators",
+            {
+                "legacy": true
+            }
+        ],
+        "babel-plugin-parameter-decorator",
+        [
+            "@babel/proposal-class-properties",
+            {
+                "loose": true
+            }
+        ],
+        "@babel/transform-runtime"
+    ]
+}

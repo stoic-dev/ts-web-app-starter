@@ -1,0 +1,10 @@
+{
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["lcov"],
+    "moduleFileExtensions": ["ts", "js"],
+    "testRegex": "\\.(spec|test)\\.ts$",
+    "transform": {
+        "\\.ts$": "ts-jest"
+    }
+}
