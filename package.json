@@ -1,7 +1,7 @@
 {
-  "name": "node-ts-website-starter",
+  "name": "ts-web-app-starter",
   "version": "0.1.0",
-  "description": "Starter project for Typescript node applications.",
+  "description": "Starter project for a Typescript Web application.",
   "main": "main.js",
   "scripts": {
     "build:dev": "webpack --config config/webpack/webpack.dev.js --progress --profile",
@@ -28,21 +28,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stoic-dev/node-ts-website-starter.git"
+    "url": "git+https://github.com/stoic-dev/ts-web-app-starter.git"
   },
   "keywords": [
     "Node",
     "Typescript",
-    "website",
+    "web",
     "template",
-    "starter"
+    "starter",
+    "PWA"
   ],
   "author": "John Harris",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stoic-dev/node-ts-website-starter/issues"
+    "url": "https://github.com/stoic-dev/ts-web-app-starter/issues"
   },
-  "homepage": "https://github.com/stoic-dev/node-ts-website-starter#readme",
+  "homepage": "https://github.com/stoic-dev/ts-web-app-starter#readme",
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
