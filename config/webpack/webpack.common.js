@@ -71,7 +71,22 @@ module.exports = function() {
             }),
             new GenerateSW({
                 clientsClaim: true,
-                skipWaiting: true
+                skipWaiting: true,
+                runtimeCaching: [{
+                    urlPattern: '/app.config.json',
+                    handler: 'NetworkFirst',
+                    options: {
+                        networkTimeoutSeconds: 5,
+                        cacheName: 'source-cache',
+                        expiration: {
+                            maxEntries: 10,
+                            maxAgeSeconds: 5 * 60 // 5 minutes
+                        },
+                        cacheableResponse: {
+                            statuses: [0, 200]
+                        }
+                    }
+                }]
             })
         ],
         output: {
