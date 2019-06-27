@@ -1,8 +1,11 @@
-const externals = [require('webpack-node-externals')()];
+const htmlTemplate = require('html-webpack-template');
 
 // Webpack Plugins
 const { CheckerPlugin } = require('awesome-typescript-loader');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
+const HtmlPlugin = require('html-webpack-plugin');
+const WebAppPlugin = require('webapp-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
 
 const { joinRelativeToProjectRootDirectory } = require('../utils');
 
@@ -11,7 +14,6 @@ module.exports = function() {
         entry: {
             main: joinRelativeToProjectRootDirectory('src', 'main.ts')
         },
-        externals,
         module: {
             rules: [
                 {
@@ -49,15 +51,42 @@ module.exports = function() {
                         'app.config.json'
                     )
                 )
+            }),
+            new HtmlPlugin({
+                title: 'node-ts-website-starter',
+                inject: false,
+                template: htmlTemplate,
+                mobile: true,
+                lang: 'en-US',
+                alwaysWriteToDisk: true // Needed for webpack-dev-server. Only applies to development.
+            }),
+            new WebAppPlugin({
+                logo: joinRelativeToProjectRootDirectory(
+                    'assets',
+                    'img',
+                    'icon.png'
+                ),
+                inject: 'force',
+                cache: true
+            }),
+            new GenerateSW({
+                clientsClaim: true,
+                skipWaiting: true
             })
         ],
         output: {
             path: joinRelativeToProjectRootDirectory('dist'),
-            filename: 'main.js'
+            filename: '[name].[hash].js'
+        },
+        optimization: {
+            runtimeChunk: 'single',
+            splitChunks: {
+                chunks: 'all'
+            }
         },
         resolve: {
             extensions: ['.js', '.ts']
         },
-        target: 'node'
+        target: 'web'
     };
 };

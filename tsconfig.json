@@ -5,7 +5,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "importHelpers": true,
-        "lib": ["esnext", "esnext.array"],
+        "lib": ["esnext", "esnext.array", "dom"],
         "module": "esnext",
         "moduleResolution": "node",
         "noEmit": false,

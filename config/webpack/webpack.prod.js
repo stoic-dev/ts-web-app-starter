@@ -12,12 +12,14 @@ const commonWebpackConfig = require('./webpack.common')();
 module.exports = function() {
     const prodWebpackConfig = {
         mode: 'production',
+        optimization: {
+            minimizer: [new UglifyJsPlugin()]
+        },
         plugins: [
             new GenerateJsonPlugin(
                 'app.config.json',
                 Object.assign(commonAppConfig, prodAppConfig)
-            ),
-            new UglifyJsPlugin()
+            )
         ]
     };
 
