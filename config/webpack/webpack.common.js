@@ -8,6 +8,7 @@ const WebAppPlugin = require('webapp-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
 
 const { joinRelativeToProjectRootDirectory } = require('../utils');
+const packageConfig = require('../../package.json');
 
 module.exports = function() {
     return {
@@ -45,15 +46,10 @@ module.exports = function() {
         plugins: [
             new CheckerPlugin(),
             new DefinePlugin({
-                DEFAULT_CONFIG_PATH: JSON.stringify(
-                    joinRelativeToProjectRootDirectory(
-                        'dist',
-                        'app.config.json'
-                    )
-                )
+                DEFAULT_CONFIG_PATH: JSON.stringify('/app.config.json')
             }),
             new HtmlPlugin({
-                title: 'node-ts-website-starter',
+                title: packageConfig.name,
                 inject: false,
                 template: htmlTemplate,
                 mobile: true,
