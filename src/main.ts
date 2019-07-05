@@ -1,20 +1,30 @@
-import * as bootstrappers from './bootstrappers/bootstrappers.index';
+import {
+    ConsoleLoggingAdapter,
+    DefaultConfigurationAdapter,
+    ServiceWorkerInitializationAdapter
+} from './infrastructure/infrastructure.index';
 
 // This is defined at build time by the Webpack DefinePlugin
 declare const DEFAULT_CONFIG_PATH: string;
 
-for (const bootstrapper of Object.values(bootstrappers)) {
-    if ('bootstrap' in bootstrapper && bootstrapper.bootstrap instanceof Function) {
-        bootstrapper.bootstrap();
-    }
-}
+(async () => {
+    const configurationAdapter = new DefaultConfigurationAdapter(
+        DEFAULT_CONFIG_PATH
+    );
+    const loggingAdapter = new ConsoleLoggingAdapter();
+    const initializationAdapter = new ServiceWorkerInitializationAdapter(
+        configurationAdapter,
+        loggingAdapter
+    );
 
-const container = document.createElement('div');
+    initializationAdapter.initialize();
 
-// Fetch the application config
-fetch(DEFAULT_CONFIG_PATH).then(response => {
-    response.json().then((config: { ENVIRONMENT: string }) => {
-        container.innerText = `Environment: ${config.ENVIRONMENT}`;
-        document.body.appendChild(container);
-    });
-});
+    const containerElement = document.createElement('div');
+    const environment = await configurationAdapter.getConfigurationSetting<
+        string
+    >('ENVIRONMENT');
+
+    containerElement.innerText = `Environment: ${environment}`;
+
+    document.body.appendChild(containerElement);
+})();
