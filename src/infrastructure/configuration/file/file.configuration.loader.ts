@@ -1,6 +1,7 @@
+import { IConfigurationLoader } from '../configuration.loader';
 import { IConfigurationModel } from '../configuration.model';
 
-export class ConfigurationLoader {
+export class FileConfigurationLoader implements IConfigurationLoader {
     private readonly _configurationUrl: string;
 
     constructor(configurationUrl: string) {

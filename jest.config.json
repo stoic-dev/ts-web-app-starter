@@ -1,8 +1,17 @@
 {
+    "automock": false,
     "collectCoverage": true,
+    "collectCoverageFrom": [
+        "src/**",
+        "!**/mock.*",
+        "!**/*.index.*"
+    ],
     "coverageDirectory": "coverage",
     "coverageReporters": ["lcov"],
     "moduleFileExtensions": ["ts", "js"],
+    "setupFiles": [
+        "./config/jest/test.setup.js"
+    ],
     "testRegex": "\\.(spec|test)\\.ts$",
     "transform": {
         "\\.ts$": "ts-jest"

@@ -1,6 +1,10 @@
+import { ILogMessage } from './log-message/log-message';
+
 export interface ILoggingPort {
-    logDebug(message: string): void;
-    logError(message: string): void;
-    logSuccess(message: string): void;
-    logWarning(message: string): void;
+    logCritical(message: ILogMessage): void;
+    logDebug(message: ILogMessage): void;
+    logError(message: ILogMessage): void;
+    logSuccess(message: ILogMessage): void;
+    logVerbose(message: ILogMessage): void;
+    logWarning(message: ILogMessage): void;
 }

@@ -49,9 +49,16 @@ module.exports = function() {
                 DEFAULT_CONFIG_PATH: JSON.stringify('/app.config.json')
             }),
             new HtmlPlugin({
+                bodyHtmlSnippet: '<noscript>This site requires Javascript.</noscript>',
                 title: packageConfig.name,
                 inject: false,
                 template: htmlTemplate,
+                meta: [
+                    {
+                        name: 'description',
+                        content: packageConfig.description
+                    }
+                ],
                 mobile: true,
                 lang: 'en-US',
                 alwaysWriteToDisk: true // Needed for webpack-dev-server. Only applies to development.
@@ -63,7 +70,10 @@ module.exports = function() {
                     'icon.png'
                 ),
                 inject: 'force',
-                cache: true
+                cache: true,
+                favicons: {
+                    startUrl: '/'
+                }
             }),
             new GenerateSW({
                 clientsClaim: true,

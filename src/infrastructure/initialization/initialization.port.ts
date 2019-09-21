@@ -1,3 +1,3 @@
-export interface IInitializationPort {
-    initialize(): void;
+export interface IInitializationPort<TResult = void> {
+    initialize(): TResult;
 }
