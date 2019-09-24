@@ -1,3 +1,3 @@
 module.exports = {
-    ENVIRONMENT: 'DEVELOPMENT'
+    environment: 'DEVELOPMENT'
 };

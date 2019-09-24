@@ -1,22 +1,18 @@
-import { IConfigurationPort } from '../../configuration/configuration.index';
 import { ILoggingPort } from '../../logging/logging.index';
 import { IInitializationPort } from '../initialization.port';
 
 export class ServiceWorkerInitializationAdapter
     implements IInitializationPort<Promise<ServiceWorkerRegistration>> {
-    private readonly _configurationAdapter: IConfigurationPort;
+    private readonly _serviceWorkerPath: string;
     private readonly _loggingAdapter: ILoggingPort;
 
-    constructor(
-        configurationAdapter: IConfigurationPort,
-        loggingAdapter: ILoggingPort
-    ) {
-        this._configurationAdapter = configurationAdapter;
+    constructor(serviceWorkerPath: string, loggingAdapter: ILoggingPort) {
+        this._serviceWorkerPath = serviceWorkerPath;
         this._loggingAdapter = loggingAdapter;
     }
 
     public async initialize(): Promise<ServiceWorkerRegistration> {
-        if (!this.doesSupportServiceWorker()) {
+        if (!this._doesSupportServiceWorker()) {
             const error = new Error(
                 'Service Workers are not supported in this browser!'
             );
@@ -32,29 +28,17 @@ export class ServiceWorkerInitializationAdapter
             return Promise.reject(error);
         }
 
-        return new Promise(resolve => {
-            const onLoadListener = async () => {
-                const path = await this.getServiceWorkerPath();
-
-                try {
-                    resolve(await this.registerServiceWorker(path));
-                } finally {
-                    window.removeEventListener('load', onLoadListener);
-                }
-            };
-
-            window.addEventListener('load', onLoadListener);
-        });
+        return this._registerServiceWorker();
     }
 
-    private doesSupportServiceWorker(): boolean {
+    private _doesSupportServiceWorker(): boolean {
         return navigator.serviceWorker !== undefined;
     }
 
-    private async registerServiceWorker(
-        path: string
-    ): Promise<ServiceWorkerRegistration> {
-        const registration = await navigator.serviceWorker.register(path);
+    private async _registerServiceWorker(): Promise<ServiceWorkerRegistration> {
+        const registration = await navigator.serviceWorker.register(
+            this._serviceWorkerPath
+        );
 
         this._loggingAdapter.logSuccess({
             body: 'Service Worker Registered!',
@@ -64,11 +48,5 @@ export class ServiceWorkerInitializationAdapter
         });
 
         return registration;
-    }
-
-    private async getServiceWorkerPath(): Promise<string> {
-        return this._configurationAdapter.getConfigurationSetting(
-            'SERVICE_WORKER_PATH'
-        );
     }
 }

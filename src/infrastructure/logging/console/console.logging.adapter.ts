@@ -1,70 +1,129 @@
 /* tslint:disable:no-console */
 
+import {
+    ILoggingConfiguration,
+    ILogLevelConfiguration
+} from '../../configuration/configuration.model';
 import { LogLevel } from '../log-level.enum';
 import { ILogMessage } from '../log-message/log-message';
 import { ILogMessageFormatter } from '../log-message/log-message.formatter';
 import { ILoggingPort } from '../logging.port';
+import { ILoggingStyle } from '../logging.style';
 
 export class ConsoleLoggingAdapter implements ILoggingPort {
     private readonly _formatter: ILogMessageFormatter;
+    private readonly _configuration: ILoggingConfiguration;
 
-    constructor(formatter: ILogMessageFormatter) {
+    constructor(
+        formatter: ILogMessageFormatter,
+        configuration: ILoggingConfiguration
+    ) {
         this._formatter = formatter;
+        this._configuration = Object.freeze(configuration);
     }
 
     public logCritical(message: ILogMessage): void {
-        console.error(
-            `%c${this._formatter.format(message, LogLevel.CRITICAL)}`,
-            'color: white; background-color: red; font-weight: bold;'
-        );
-
-        if (message.trace) {
-            this.logTrace(message.trace);
-        }
+        this._printLogMessage('error', message, LogLevel.CRITICAL);
     }
 
     public logDebug(message: ILogMessage): void {
-        console.debug(
-            `%c${this._formatter.format(message, LogLevel.DEBUG)}`,
-            'color: cyan; font-weight: bold;'
-        );
+        this._printLogMessage('debug', message, LogLevel.DEBUG);
     }
 
     public logError(message: ILogMessage): void {
-        console.error(
-            `%c${this._formatter.format(message, LogLevel.ERROR)}`,
-            'color: red; font-weight: bold;'
-        );
-
-        if (message.trace) {
-            this.logTrace(message.trace);
-        }
+        this._printLogMessage('error', message, LogLevel.ERROR);
     }
 
     public logSuccess(message: ILogMessage): void {
-        console.log(
-            `%c${this._formatter.format(message, LogLevel.SUCCESS)}`,
-            'color: green; font-weight: bold;'
-        );
+        this._printLogMessage('log', message, LogLevel.SUCCESS);
     }
 
     public logVerbose(message: ILogMessage): void {
-        console.log(
-            `%c${this._formatter.format(message, LogLevel.VERBOSE)}`,
-            'color: blue; font-weight: bold;'
-        );
+        this._printLogMessage('log', message, LogLevel.VERBOSE);
     }
 
     public logWarning(message: ILogMessage): void {
-        console.warn(
-            `%c${this._formatter.format(message, LogLevel.WARNING)}`,
-            'color: yellow; font-weight: bold;'
-        );
+        this._printLogMessage('warn', message, LogLevel.WARNING);
     }
 
-    private logTrace(trace: string): void {
+    private _printLogMessage(
+        method: ConsoleMethod,
+        logMessage: ILogMessage,
+        logLevel: LogLevel
+    ): void {
+        const { message, styles } = this._createFormattedLogMessage(
+            logMessage,
+            logLevel
+        );
+
+        (console[method] as Function)(message, ...styles);
+
+        if (logMessage.trace) {
+            this._printTrace(logMessage.trace);
+        }
+    }
+
+    private _getStylesForLogLevel(logLevel: LogLevel): ILogLevelConfiguration {
+        return this._configuration[
+            LogLevel[logLevel].toLowerCase() as keyof ILoggingConfiguration
+        ];
+    }
+
+    private _createFormattedLogMessage(
+        message: ILogMessage,
+        logLevel: LogLevel
+    ): IFormattedLogMessage {
+        const { messageStyle, prefixStyle } = this._getStylesForLogLevel(
+            logLevel
+        );
+        const prefix = this._createLogMessagePrefix(
+            message.subject,
+            prefixStyle
+        );
+        return {
+            message: `${prefix.message}%c${this._formatter.format(
+                message,
+                logLevel
+            )}`,
+            styles: [
+                ...prefix.styles,
+                `${this._convertConsoleStyleToString(
+                    messageStyle
+                )} font-weight: bold;`
+            ]
+        };
+    }
+
+    private _createLogMessagePrefix(
+        prefixLabel: string,
+        prefixStyle: ILoggingStyle
+    ): IFormattedLogMessage {
+        return {
+            message: `%c${prefixLabel}`,
+            styles: [
+                `${this._convertConsoleStyleToString(
+                    prefixStyle
+                )} font-weight: bold; padding: 2px 0.5em; border-radius: 0.5em; margin-right: 5px;`
+            ]
+        };
+    }
+
+    private _convertConsoleStyleToString(style: ILoggingStyle): string {
+        return `color: ${
+            style.textColor
+        }; background-color: ${style.backgroundColor || 'white'};`;
+    }
+
+    private _printTrace(trace: string): void {
         console.group('Trace');
         console.log(trace);
         console.groupEnd();
     }
 }
+
+interface IFormattedLogMessage {
+    message: string;
+    styles: Array<string>;
+}
+
+type ConsoleMethod = Exclude<keyof Console, 'Console'>;

@@ -32,7 +32,7 @@ describe('ServiceWorkerInitializationAdapter', () => {
             const configurationAdapter = instance(
                 createMockConfigurationPort(mocked => {
                     when(
-                        mocked.getConfigurationSetting<string>('SERVICE_WORKER_PATH')
+                        mocked.getConfigurationSetting<string>('serviceWorkerPath')
                     ).thenResolve(serviceWorkerPath);
 
                     return mocked;
@@ -40,7 +40,7 @@ describe('ServiceWorkerInitializationAdapter', () => {
             );
             const loggingAdapter = instance(createMockLoggingAdapter());
             const initializationAdapter = new ServiceWorkerInitializationAdapter(
-                configurationAdapter,
+                'test',
                 loggingAdapter
             );
 
@@ -54,7 +54,7 @@ function createServiceWorkerInitializationAdapter(
     loggingAdapter: ILoggingPort
 ) {
     return new ServiceWorkerInitializationAdapter(
-        configurationAdapter,
+        'test',
         loggingAdapter
     );
 }

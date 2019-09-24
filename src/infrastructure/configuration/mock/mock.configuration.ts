@@ -1,5 +1,7 @@
-module.exports = {
-    serviceWorkerPath: '/service-worker.js',
+import { IConfigurationModel } from '../configuration.model';
+
+export const mockConfiguration: IConfigurationModel = {
+    environment: 'test',
     logging: {
         critical: {
             messageStyle: {
@@ -61,5 +63,6 @@ module.exports = {
                 textColor: 'white'
             }
         }
-    }
+    },
+    serviceWorkerPath: 'test'
 };

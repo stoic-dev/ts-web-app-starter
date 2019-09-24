@@ -1,3 +1,3 @@
 module.exports = {
-    ENVIRONMENT: 'PRODUCTION'
+    environment: 'PRODUCTION'
 };
