@@ -1,14 +1,14 @@
 /* tslint:disable:no-console */
 
-import {
-    ILoggingConfiguration,
-    ILogLevelConfiguration
-} from '../../configuration/configuration.model';
 import { LogLevel } from '../log-level.enum';
 import { ILogMessage } from '../log-message/log-message';
 import { ILogMessageFormatter } from '../log-message/log-message.formatter';
+import {
+    ILoggingConfiguration,
+    ILoggingStyle,
+    ILogLevelConfiguration
+} from '../logging.configuration';
 import { ILoggingPort } from '../logging.port';
-import { ILoggingStyle } from '../logging.style';
 
 export class ConsoleLoggingAdapter implements ILoggingPort {
     private readonly _formatter: ILogMessageFormatter;
