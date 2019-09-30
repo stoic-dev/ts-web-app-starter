@@ -1,3 +1,4 @@
+import { HomeLayoutComponent } from './core/core.index';
 import {
     ConsoleLoggingAdapter,
     FileConfigurationAdapter,
@@ -11,16 +12,19 @@ import {
 // This is defined at build time by the Webpack DefinePlugin
 declare const DEFAULT_CONFIG_PATH: string;
 
-const onLoadCallback = async () => {
-    try {
-        await main();
-    } finally {
-        window.removeEventListener('load', onLoadCallback);
-    }
-};
+start();
 
-// Ensure that the page is loaded when our application is run.
-window.addEventListener('load', onLoadCallback);
+function start() {
+    const callback = async () => {
+        try {
+            await main();
+        } finally {
+            window.removeEventListener('load', callback);
+        }
+    };
+
+    window.addEventListener('load', callback);
+}
 
 async function main() {
     const configurationLoader = new FileConfigurationLoader(
@@ -42,14 +46,20 @@ async function main() {
 
     initializeServiceWorker(serviceWorkerPath, loggingAdapter);
 
-    const containerElement = document.createElement('div');
-    const environment = await configurationAdapter.getConfigurationSetting<
-        string
-    >('environment');
+    const environment = await configurationAdapter.getConfigurationSetting<string>('environment');
+    const home = new Range().createContextualFragment(`
+        <home-layout-component>
+            <navbar-layout-component slot="navbar">
+                <div slot="title">${environment}</div>
+                <div slot="links">Links</div>
+                <div slot="user">User</div>
+            </navbar-layout-component>
+            <div slot="main">Hello, World!</div>
+        </home-layout-component>
+    `).firstElementChild as HomeLayoutComponent;
 
-    containerElement.innerText = `Environment: ${environment}`;
-
-    document.body.appendChild(containerElement);
+    document.body.style.margin = '0';
+    document.body.appendChild(home);
 }
 
 async function initializeServiceWorker(
@@ -74,3 +84,5 @@ async function initializeServiceWorker(
         });
     }
 }
+
+export * from './core/core.index';

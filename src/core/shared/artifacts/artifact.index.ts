@@ -1,0 +1,1 @@
+export { IArtifact } from './artifact';
