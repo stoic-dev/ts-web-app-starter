@@ -4,7 +4,7 @@ import { mockConfiguration } from '../../configuration/configuration.index';
 import { LogLevel } from '../log-level.enum';
 import { ILogMessage } from '../log-message/log-message';
 import { ILogMessageFormatter } from '../log-message/log-message.formatter';
-import { ILoggingStyle } from '../logging.style';
+import { ILoggingStyle } from '../logging.configuration';
 import { MockLogMessageFormatter } from '../mock/mock.log-message.formatter';
 import { ConsoleLoggingAdapter } from './console.logging.adapter';
 
