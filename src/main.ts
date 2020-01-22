@@ -1,4 +1,3 @@
-import { HomeLayoutComponent } from './core/core.index';
 import {
     ConsoleLoggingAdapter,
     FileConfigurationAdapter,
@@ -75,19 +74,5 @@ async function initializeServiceWorker(
 }
 
 function displayUI(environment: string): void {
-    const home = new Range().createContextualFragment(`
-        <home-layout-component>
-            <navbar-layout-component slot="navbar">
-                <div slot="title">${environment}</div>
-                <div slot="links">Links</div>
-                <div slot="user">User</div>
-            </navbar-layout-component>
-            <div slot="main">Hello, World!</div>
-        </home-layout-component>
-    `).firstElementChild as HomeLayoutComponent;
-
     document.body.style.margin = '0';
-    document.body.appendChild(home);
 }
-
-export * from './core/core.index';
